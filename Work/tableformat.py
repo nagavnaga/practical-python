@@ -107,3 +107,19 @@ class HTMLTableFormatter(TableFormatter):
             print(f"<td>{data}</td>", end='')
         print("</tr>")
         # print()
+
+
+def print_table(objects, columns, fmt='txt'):
+    """
+    Prints a nicely formatted table with dyanmic colums
+    :return:
+    """
+    formatter = create_formatter(fmt)
+    formatter.headings(columns)
+    for obj in objects:
+        rowdata = [str(getattr(obj, column)) for column in columns]
+        formatter.row(rowdata)
+
+
+
+
