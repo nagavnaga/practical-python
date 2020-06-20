@@ -13,30 +13,46 @@ Hint:
 import gzip
 import csv
 import sys
+import report
 
-portfolio = r'Data/portfolio.csv'
-missing = r'Data/missing.csv'
+# portfolio = r'Data/portfolio.csv'
+# missing = r'Data/missing.csv'
+# new_file = 'Data/portfoliodate.csv'
 
-if len(sys.argv) == 2:
-    filename = sys.argv[1]
-else:
-    filename = portfolio
+# if len(sys.argv) == 2:
+#     filename = sys.argv[1]
+# else:
+#     filename = portfolio
+
 
 def portfolio_cost(filename):
-    with open(filename, 'rt') as file:
-        rows = csv.reader(file)
-        headers = next(rows)
-        total = 0
-        for row in rows:
-            try:
-                share_cost = int(row[1]) * float(row[2])
-            except ValueError:
-                print(f"Not able to process {row}")
-            total += share_cost
+    # with open(filename, 'rt') as file:
+    #     rows = csv.reader(file)
+    #     headers = next(rows)
+    #     total = 0.0
+    #     for rowno, row in enumerate(rows,start=1):
+    #         record = dict(zip(headers, row))
+    #         try:
+    #             nshares = int(record['shares'])
+    #             price = float(record['price'])
+    #             share_cost = nshares * price
+    #         except ValueError:
+    #             print(f"Row {rowno}: Not able to process {row}")
+    #         total += share_cost
+    portfolio = report.read_portfolio(filename)
+    total = sum([stock.cost for stock in portfolio])
 
-    print(f"Total cost  {total}")
+    return total
+
+
+def main(argv):
+    if len(argv) != 2:
+        raise SystemExit('Usage: %s portfoliofile' % argv[0])
+
+    filename = argv[1]
+    cost = portfolio_cost(filename)
+    print('Total cost:', cost)
 
 
 if __name__ == '__main__':
-    # portfolio_cost(portfolio)
-    portfolio_cost(filename)
+    main(sys.argv)
